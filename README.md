@@ -1,295 +1,143 @@
-# C++ High-Performance Trading Platform
+# Python Trading Platform
 
-A comprehensive, production-grade trading platform built in modern C++20, featuring low-latency order management, execution algorithms, risk management, backtesting, and market simulation capabilities.
+Stock analysis and portfolio management platform with ML-powered predictions.
 
-![C++](https://img.shields.io/badge/C%2B%2B-20-blue.svg)
-![Build](https://img.shields.io/badge/build-passing-brightgreen.svg)
-![Tests](https://img.shields.io/badge/tests-339%20passing-brightgreen.svg)
-![Lines of Code](https://img.shields.io/badge/lines%20of%20code-49%2C000-informational.svg)
+## Features
 
-## Overview
+- **Stock Analysis** - Technical indicators (RSI, MACD, Bollinger Bands) and fundamental metrics (P/E, ROE, debt ratios)
+- **ML Predictions** - Ensemble models using Random Forest, Gradient Boosting, XGBoost, LightGBM, and LSTM neural networks
+- **Portfolio Tracking** - Track holdings, P&L, and performance
+- **Watchlists** - Monitor stocks you're interested in
+- **Price Alerts** - Get notified when stocks hit target prices
+- **Sector Analysis** - Monitor sector ETF performance
+- **Multi-Exchange** - Supports US (NYSE, NASDAQ), Australian (ASX), UK (LSE), and more
+- **Web Dashboard** - Browser-based interface at localhost:8080
 
-This trading platform provides a complete infrastructure for algorithmic trading, from market data handling through order execution and post-trade analytics. The system is designed with performance, modularity, and extensibility as core principles.
+## Tech Stack
 
-### Key Features
+- **Python 3.10+**
+- **ML Libraries**: scikit-learn, PyTorch, XGBoost, LightGBM
+- **Data**: NumPy, Pandas
+- **APIs**: Alpaca, FMP, Finnhub, Yahoo Finance
 
-- **Low-Latency Architecture**: Lock-free data structures, cache-optimized order books, nanosecond-precision timing
-- **Complete Order Lifecycle**: Order management, smart routing, execution algorithms (TWAP, VWAP, POV, Iceberg)
-- **Risk Management**: Real-time position limits, P&L tracking, VaR calculations, circuit breakers
-- **Strategy Framework**: Backtesting engine, signal generation, portfolio optimization
-- **Production Systems**: Configuration management, observability, shadow trading for validation
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           Trading Platform                               │
-├─────────────────────────────────────────────────────────────────────────┤
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │   Market    │  │    Order    │  │  Execution  │  │    Risk     │    │
-│  │    Data     │  │  Management │  │   Algos     │  │  Management │    │
-│  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘  └──────┬──────┘    │
-│         │                │                │                │            │
-│         ▼                ▼                ▼                ▼            │
-│  ┌─────────────────────────────────────────────────────────────────┐   │
-│  │                     Core Infrastructure                          │   │
-│  │  • Lock-free Queues  • Order Books  • Type System  • Gateway    │   │
-│  └─────────────────────────────────────────────────────────────────┘   │
-│         │                │                │                │            │
-│         ▼                ▼                ▼                ▼            │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐    │
-│  │  Strategy   │  │  Backtest   │  │  Analytics  │  │   Shadow    │    │
-│  │  Framework  │  │   Engine    │  │    Suite    │  │   Trading   │    │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘    │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-## Components
-
-### Phase 1: Core Infrastructure
-| Component | Description |
-|-----------|-------------|
-| **Type System** | Price, Quantity, OrderId, InstrumentId with compile-time safety |
-| **Order Book** | Cache-optimized L2/L3 book with O(1) top-of-book access |
-| **Lock-free Structures** | SPSC/MPMC queues, seqlock, object pool for zero-allocation paths |
-| **Order Manager** | Complete order lifecycle with state machine validation |
-| **Market Data** | Handlers for quotes, trades, and book updates |
-| **Gateway** | Exchange connectivity abstraction layer |
-
-### Phase 2: Trading Logic
-| Component | Description |
-|-----------|-------------|
-| **Pricing Engine** | Black-Scholes, binomial trees, Monte Carlo, Greeks calculation |
-| **Quoting Engine** | Market making with spread management and inventory control |
-| **Hedging System** | Delta/gamma hedging, exposure aggregation |
-| **Smart Order Router** | Multi-venue routing with latency-aware selection |
-| **Execution Algorithms** | TWAP, VWAP, POV, Iceberg, Implementation Shortfall |
-| **Historical Data** | Time series storage, corporate actions, replay capability |
-
-### Phase 3: Strategy & Analytics
-| Component | Description |
-|-----------|-------------|
-| **Strategy Framework** | Base classes, signal combination, position sizing (Kelly) |
-| **Backtesting Engine** | Event-driven simulation with realistic fill modeling |
-| **Analytics Suite** | Returns analysis, drawdown, rolling statistics |
-| **Market Simulation** | Order book simulation, market impact models |
-| **Performance Attribution** | P&L decomposition, factor analysis, TCA |
-| **Risk Management** | VaR, portfolio risk, correlation analysis |
-
-### Phase 4: Production Systems
-| Component | Description |
-|-----------|-------------|
-| **Demo Mode** | Sandbox environment for testing |
-| **Reference Data** | Instrument definitions, symbology, calendars |
-| **Signal Generation** | Technical indicators, signal normalization, decay |
-| **Configuration** | Hot-reload config, feature flags, versioning |
-| **Observability** | Metrics, alerting, health monitoring |
-| **Shadow Trading** | Paper trading, model validation, live comparison |
-
-## Building
-
-### Prerequisites
-
-- C++20 compatible compiler (GCC 10+, Clang 12+, Apple Clang 14+)
-- CMake 3.16+
-- pthreads
-
-### Build Instructions
+## Installation
 
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/trading_platform.git
-cd trading_platform
+git clone https://github.com/ABurfoot/python-trading-platform.git
+cd python-trading-platform
 
-# Create build directory
-mkdir build && cd build
+# Required
+pip install requests numpy pandas scikit-learn
 
-# Configure and build
-cmake .. -DCMAKE_BUILD_TYPE=Release
-
-# Linux
-make -j$(nproc)
-
-# macOS
-make -j$(sysctl -n hw.ncpu)
-
-# Run tests
-ctest --output-on-failure
+# Optional - for deep learning
+pip install torch xgboost lightgbm
 ```
 
-### Build Options
+## API Keys
 
-| Option | Default | Description |
-|--------|---------|-------------|
-| `CMAKE_BUILD_TYPE` | Release | Build type (Debug/Release/RelWithDebInfo) |
-| `BUILD_TESTS` | ON | Build unit tests |
-| `BUILD_BENCHMARKS` | OFF | Build performance benchmarks |
+Set up API keys as environment variables (all optional - uses available providers):
+
+```bash
+export ALPACA_API_KEY="your_key"
+export ALPACA_SECRET_KEY="your_secret"
+export FMP_API_KEY="your_key"
+export FINNHUB_API_KEY="your_key"
+```
 
 ## Usage
 
-### Running the Example
+### Web Dashboard
 
 ```bash
-./bin/trading_example
+python3 -m trading.dashboard
+# Open http://localhost:8080
 ```
 
-### Running Tests
+### Command Line
 
 ```bash
-# Run all tests
-ctest --output-on-failure
+# Analyze a stock
+python3 trade.py analyze AAPL
 
-# Run specific test
-./bin/test_execution
-./bin/test_shadow
-./bin/test_pricing
-```
+# International stocks
+python3 trade.py analyze ASX:BHP
+python3 trade.py analyze LSE:VOD
 
-### Code Example
+# Watchlist
+python3 trade.py watchlist add AAPL MSFT GOOGL
+python3 trade.py watchlist list
 
-```cpp
-#include <trading/platform.hpp>
-#include <trading/shadow/shadow_controller.hpp>
-
-int main() {
-    using namespace trading;
-    
-    // Create shadow trading controller for paper trading
-    shadow::ShadowController controller("my_strategy");
-    
-    // Configure circuit breakers
-    shadow::CircuitBreakerConfig config;
-    config.max_daily_loss = 10000.0;
-    config.max_drawdown_pct = 5.0;
-    controller.set_circuit_breaker_config(config);
-    
-    // Start in shadow mode
-    controller.start();
-    
-    // Update market data
-    shadow::MarketQuote quote;
-    quote.instrument_id = "AAPL";
-    quote.bid = 149.90;
-    quote.ask = 150.10;
-    controller.update_market_data(quote);
-    
-    // Process trading signals
-    controller.process_signal("AAPL", 0.8, 0.75);  // bullish signal
-    
-    // Generate report
-    auto report = controller.generate_report();
-    
-    return 0;
-}
+# Portfolio
+python3 trade.py portfolio summary
 ```
 
 ## Project Structure
 
 ```
-trading_platform/
-├── CMakeLists.txt
-├── README.md
-├── include/
-│   └── trading/
-│       ├── types.hpp              # Core type definitions
-│       ├── order_book.hpp         # Order book implementation
-│       ├── order_manager.hpp      # Order lifecycle management
-│       ├── market_data.hpp        # Market data handling
-│       ├── lockfree.hpp           # Lock-free data structures
-│       ├── gateway.hpp            # Exchange connectivity
-│       ├── platform.hpp           # Main include header
-│       ├── pricing/               # Pricing models
-│       ├── execution/             # Execution algorithms
-│       ├── strategy/              # Strategy framework
-│       ├── backtest/              # Backtesting engine
-│       ├── analytics/             # Performance analytics
-│       ├── risk/                  # Risk management
-│       ├── portfolio/             # Portfolio optimization
-│       ├── shadow/                # Shadow trading system
-│       ├── observability/         # Monitoring & alerting
-│       └── ...
-├── tests/
-│   ├── test_types.cpp
-│   ├── test_order_book.cpp
-│   ├── test_execution.cpp
+python-trading-platform/
+├── trading/
+│   ├── analyzer.py          # Stock analysis engine
+│   ├── dashboard.py         # Web interface
+│   ├── data_sources.py      # Multi-API data fetching
+│   ├── ml_predictor_v2.py   # ML prediction models
+│   ├── indicators.py        # Technical indicators
+│   ├── portfolio.py         # Portfolio management
+│   ├── watchlist.py         # Watchlist management
+│   ├── alerts.py            # Price alerts
+│   ├── sectors.py           # Sector analysis
+│   ├── backtest_engine.py   # Strategy backtesting
+│   ├── risk_manager.py      # Risk calculations
 │   └── ...
-└── examples/
-    └── main.cpp
+├── tests/
+├── trade.py                 # CLI entry point
+└── test_comprehensive.py    # Test suite (277 tests)
 ```
 
-## Performance Characteristics
+## ML Models
 
-- **Order Book Updates**: < 100ns per update
-- **Lock-free Queue**: ~20ns enqueue/dequeue
-- **Order Submission**: < 1μs internal latency
-- **Memory**: Zero-allocation on critical paths using object pools
+The prediction system uses an ensemble of:
 
-## Testing
+| Model | Library | Type |
+|-------|---------|------|
+| Random Forest | scikit-learn | Traditional ML |
+| Gradient Boosting | scikit-learn | Traditional ML |
+| Ridge Regression | scikit-learn | Traditional ML |
+| XGBoost | xgboost | Boosting |
+| LightGBM | lightgbm | Boosting |
+| LSTM | PyTorch | Deep Learning |
+| GRU | PyTorch | Deep Learning |
+| CNN-LSTM | PyTorch | Deep Learning |
 
-The platform includes comprehensive test coverage:
-
-- Unit tests for all components
-- Integration tests for order flow
-- Edge case handling
-- Thread safety validation
+## Running Tests
 
 ```bash
-# Run with verbose output
-ctest -V
+# All tests
+python3 test_comprehensive.py
 
-# Run specific test suite
-./bin/test_shadow
-./bin/test_execution
-./bin/test_risk
+# Quick (skip API calls)
+python3 test_comprehensive.py --quick
+
+# Specific category
+python3 test_comprehensive.py --category dashboard
 ```
 
-## Extending the Platform
+## Dashboard Tabs
 
-### Adding a New Execution Algorithm
+| Tab | Description |
+|-----|-------------|
+| Analysis | Full technical + fundamental analysis |
+| Compare | Side-by-side stock comparison |
+| ML Predict | Price predictions with confidence intervals |
+| Watchlist | Tracked stocks with live prices |
+| Portfolio | Holdings and P&L |
+| Alerts | Price alert management |
+| News | Stock news feed |
+| Sectors | Sector ETF performance |
 
-```cpp
-// In include/trading/execution/my_algo.hpp
-class MyAlgorithm : public ExecutionAlgorithm {
-public:
-    SliceResult calculate_slice(const AlgoOrder& order, 
-                                const MarketState& market) override {
-        // Your algorithm logic here
-    }
-};
-```
+## Disclaimer
 
-### Adding a New Signal Generator
-
-```cpp
-// In include/trading/signals/my_signal.hpp
-class MySignal : public SignalGenerator {
-public:
-    double generate(InstrumentId id, const MarketData& data) override {
-        // Your signal logic here
-    }
-};
-```
-
-## Future Enhancements
-
-Potential areas for extension:
-
-- [ ] FIX protocol connectivity
-- [ ] Interactive Brokers / Alpaca integration
-- [ ] Web-based dashboard (React)
-- [ ] Machine learning model integration
-- [ ] Cryptocurrency exchange support
-- [ ] Options market making strategies
+For educational purposes only. Not financial advice. Do your own research before investing.
 
 ## License
 
-This project is available for educational and portfolio purposes.
-
-## Author
-
-Built as a comprehensive demonstration of quantitative finance and systems programming skills, showcasing:
-
-- Modern C++20 features (concepts, ranges, coroutines-ready)
-- Low-latency design patterns
-- Financial domain knowledge
-- Production-quality software engineering
+MIT
